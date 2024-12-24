@@ -13,6 +13,9 @@ function App() {
           <div>Basic Nepali Date picker</div>
           <NepaliDatePicker name="date1" />
           <hr />
+          <div>Nepali Date picker (locale=ne)</div>
+          <NepaliDatePicker name="dateNe" locale="ne" />
+          <hr />
           <div>Input onDateSelect, value: {inputValue}</div>
           <NepaliDatePicker
             value={inputValue}

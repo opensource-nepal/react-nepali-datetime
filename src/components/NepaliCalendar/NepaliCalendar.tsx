@@ -3,23 +3,35 @@ import NepaliDate from 'nepali-datetime'
 
 import YearSelector from '../core/YearSelector'
 import MonthSelector from '../core/MonthSelector'
-import { MAX_NEPALI_YEAR, MIN_NEPALI_YEAR, WEEK_DAYS_SHORT_EN } from '../../constants'
+import {
+  DEFAULT_LOCALE,
+  LOCALE_NE,
+  MAX_NEPALI_YEAR,
+  MIN_NEPALI_YEAR,
+  WEEKDAYS_SHORT_EN,
+  WEEKDAYS_SHORT_NE,
+} from '../../constants'
 import { getCalendarTableArray, ICalendarDate } from '../../utils/calendar'
 import classNames from '../../utils/classNames'
+import type { Locale } from '../../types'
 
 import styles from './NepaliCalendar.module.scss'
+import { nepaliNumber } from '../../utils/nepaliNumber'
 
 export interface INepaliCalendarProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   selectedNepaliDate?: NepaliDate | null
   onDateSelect?: ((nepaliDate: NepaliDate) => void) | null
+  locale?: Locale
 }
 
 const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
   selectedNepaliDate,
   onDateSelect = null,
+  locale = DEFAULT_LOCALE,
 }) => {
   const now = new NepaliDate()
+  const weekDays = locale === LOCALE_NE ? WEEKDAYS_SHORT_NE : WEEKDAYS_SHORT_EN
 
   const [selectedYear, setSelectedYear] = useState(
     selectedNepaliDate?.getYear() ?? now.getYear()
@@ -97,10 +109,12 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
           <YearSelector
             selectedYear={selectedYear}
             onChange={newYear => setSelectedYear(newYear)}
+            locale={locale}
           />
           <MonthSelector
             selectedMonth={selectedMonth}
             onChange={newMonth => setSelectedMonth(newMonth)}
+            locale={locale}
           />
         </div>
         <div className={`ndt-next ${styles.prevNext}`}>
@@ -126,12 +140,12 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
       </div>
       <div className={`ndt-calendar-container ${styles.calendarContainer}`}>
         <div className={`ndt-calendar-grid ${styles.calendarGrid}`}>
-          {WEEK_DAYS_SHORT_EN.map(weekShortEn => (
+          {weekDays.map(weekShort => (
             <div
-              key={weekShortEn}
+              key={weekShort}
               className={classNames('ndt-calendar-header', styles.calendarCell)}
             >
-              {weekShortEn}
+              {weekShort}
             </div>
           ))}
         </div>
@@ -150,7 +164,9 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
                 !calendarDate.active && styles.calendarCellInactive
               )}
             >
-              {calendarDate.date}
+              {calendarDate.date && locale === LOCALE_NE
+                ? nepaliNumber(calendarDate.date)
+                : calendarDate.date}
             </div>
           ))}
         </div>
