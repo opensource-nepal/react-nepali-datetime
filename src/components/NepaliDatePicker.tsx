@@ -6,13 +6,15 @@ import PickerInput from './core/PickerInput'
 import { DEFAULT_LOCALE, LOCALE_NE } from '../constants'
 import type { Locale } from '../types'
 import { englishNumber } from '../utils/nepaliNumber'
+import classNames from '../utils/classNames'
+import styles from './NepaliDatePicker.module.scss'
 
 interface INepaliDatePickerProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string
   format?: string
   inputElement?: ReactElement | null
   locale?: Locale
-  onDateSelect?: ((value: string) => void) | null
+  onDateSelect?: ((value: string, nepaliDate?: NepaliDate) => void) | null
 }
 
 const getNepaliDateOrNull = (
@@ -39,25 +41,72 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
 }) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
   const [inputValue, setInputValue] = useState(value)
+  const [npDate, setNpDate] = useState<NepaliDate | null>()
 
-  const inputProps = { value: inputValue, readOnly: true }
+  const isDateValueError = inputValue && !npDate
 
   useEffect(() => {
     setInputValue(value)
-  }, [value])
+    setNpDate(getNepaliDateOrNull(value, format, locale))
+  }, [value, locale, format])
 
-  const setDateValue = (dateValue: string) => {
+  const callOnDateSelect = (dateValue: string, nepaliDate?: NepaliDate) =>
+    onDateSelect && onDateSelect(dateValue, nepaliDate)
+
+  const emptyDateValue = () => {
+    setInputValue('')
+    setNpDate(null)
+    callOnDateSelect('')
+  }
+
+  const updateDateByNepaliDate = (nepaliDate: NepaliDate) => {
+    const formattedValue =
+      locale === LOCALE_NE ? nepaliDate.formatNepali(format) : nepaliDate.format(format)
+    setInputValue(formattedValue)
+    setNpDate(nepaliDate)
+    callOnDateSelect(formattedValue, nepaliDate)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dateValue = e.target.value
+
+    const npDateObj = getNepaliDateOrNull(dateValue, format, locale)
     setInputValue(dateValue)
-    if (onDateSelect) {
-      onDateSelect(dateValue)
+    setNpDate(npDateObj)
+  }
+
+  const handleDateSelect = (nepaliDate: NepaliDate) => {
+    updateDateByNepaliDate(nepaliDate)
+    setIsPopoverVisible(false)
+  }
+
+  const setFinalValue = () => {
+    if (isDateValueError) {
+      // setting empty value if the user input date is invalid
+      emptyDateValue()
+    } else if (npDate) {
+      // not every user input date are in format, so reformatting the date again
+      updateDateByNepaliDate(npDate)
     }
   }
 
-  const handleSetDate = (nepaliDate: NepaliDate) => {
-    const inputValue =
-      locale === LOCALE_NE ? nepaliDate.formatNepali(format) : nepaliDate.format(format)
-    setDateValue(inputValue)
-    setIsPopoverVisible(false)
+  const handlePopoverOpenChange = (newOpen: boolean) => {
+    setIsPopoverVisible(newOpen)
+    if (!newOpen) {
+      setFinalValue()
+    }
+  }
+
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') {
+      setFinalValue()
+    }
+  }
+
+  const inputProps = {
+    value: inputValue,
+    onChange: handleInputChange,
+    onKeyDown: handleEnter,
   }
 
   // updating props to custom input element
@@ -66,14 +115,17 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
 
   return (
     <Popover
-      className="ndt-date-picker"
+      className={classNames(
+        'ndt-date-picker',
+        isDateValueError && styles.datePickerInputError
+      )}
       open={isPopoverVisible}
-      onOpenChange={newOpen => setIsPopoverVisible(newOpen)}
+      onOpenChange={handlePopoverOpenChange}
       content={
         <NepaliCalendar
           locale={locale}
-          selectedNepaliDate={getNepaliDateOrNull(inputValue, format, locale)}
-          onDateSelect={handleSetDate}
+          selectedNepaliDate={npDate}
+          onDateSelect={handleDateSelect}
         />
       }
     >

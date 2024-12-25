@@ -51,6 +51,7 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
 
   useLayoutEffect(() => {
     updatePopupPosition()
+    // todo: handle blur and keydown
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   }, [handleOutsideClick, updatePopupPosition])
