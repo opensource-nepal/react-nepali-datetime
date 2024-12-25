@@ -13,7 +13,7 @@ export default tseslint.config({
     eslintPluginPrettierRecommended,
   ],
   files: ['**/*.{ts,tsx}'],
-  ignores: ['dist'],
+  ignores: ['dist/**'],
   languageOptions: {
     ecmaVersion: 2020,
     globals: globals.browser,

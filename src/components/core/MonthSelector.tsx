@@ -24,8 +24,8 @@ const MonthSelector: React.FC<IMonthSelectionProps> = ({
     value={selectedMonth}
     onChange={e => onMonthChange && onMonthChange(Number(e.target.value))}
   >
-    {getNepaliMonths(locale).map((month, month0) => (
-      <option key={month} value={month0}>
+    {getNepaliMonths(locale).map((month, monthIndex) => (
+      <option key={month} value={monthIndex}>
         {month}
       </option>
     ))}

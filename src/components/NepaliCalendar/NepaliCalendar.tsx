@@ -42,13 +42,13 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
 
   const isCurrentDate = (calendarDate: ICalendarDate) =>
     calendarDate.year === now.getYear() &&
-    calendarDate.month0 === now.getMonth() &&
+    calendarDate.month === now.getMonth() &&
     calendarDate.date === now.getDate()
 
   const isSelectedDate = (calendarDate: ICalendarDate) =>
     selectedNepaliDate &&
     calendarDate.year === selectedNepaliDate.getYear() &&
-    calendarDate.month0 === selectedNepaliDate.getMonth() &&
+    calendarDate.month === selectedNepaliDate.getMonth() &&
     calendarDate.date === selectedNepaliDate.getDate()
 
   const handleDateSelect = (calendarDate: ICalendarDate) => {
@@ -64,10 +64,10 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
       return
     }
 
-    const [prevMonthYear, prevMonth0] =
+    const [prevMonthYear, prevMonth] =
       selectedMonth === 0 ? [selectedYear - 1, 11] : [selectedYear, selectedMonth - 1]
     setSelectedYear(prevMonthYear)
-    setSelectedMonth(prevMonth0)
+    setSelectedMonth(prevMonth)
   }
 
   const setNextMonth = () => {
@@ -75,10 +75,10 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
       return
     }
 
-    const [prevMonthYear, prevMonth0] =
+    const [prevMonthYear, prevMonth] =
       selectedMonth === 11 ? [selectedYear + 1, 0] : [selectedYear, selectedMonth + 1]
     setSelectedYear(prevMonthYear)
-    setSelectedMonth(prevMonth0)
+    setSelectedMonth(prevMonth)
   }
 
   const calendarArray = getCalendarTableArray(selectedYear, selectedMonth)

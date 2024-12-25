@@ -1,68 +1,71 @@
 import NepaliDate from 'nepali-datetime'
-import { MAX_NEPALI_YEAR, MIN_NEPALI_YEAR, NP_MONTHS_DATA } from '../constants'
 
-const WEEK_COUNT = 7
+const DAYS_IN_WEEK = 7
 
 export interface ICalendarDate {
   index: number
   active: boolean
   year: number
-  month0: number
+  month: number
   date: number | null
 }
 
-const getMonthData = (year: number, month0: number) => {
-  if (year < MIN_NEPALI_YEAR || year > MAX_NEPALI_YEAR) {
+const getMonthData = (year: number, month: number) => {
+  try {
+    return NepaliDate.getDaysOfMonth(year, month)
+  } catch {
     return null
   }
-  return NP_MONTHS_DATA[year - MIN_NEPALI_YEAR][0][month0]
 }
 
-export const getCalendarTableArray = (
-  year: number,
-  month0: number
-): ICalendarDate[] => {
-  const currentMonthDays = getMonthData(year, month0)
+export const getCalendarTableArray = (year: number, month: number): ICalendarDate[] => {
+  const currentMonthDays = getMonthData(year, month)
   if (!currentMonthDays) {
     return []
   }
 
-  const startWeekDay = new NepaliDate(year, month0, 1).getDay()
+  const startWeekDay = new NepaliDate(year, month, 1).getDay()
 
-  const [prevMonthYear, prevMonth0] = month0 === 0 ? [year - 1, 11] : [year, month0 - 1]
-  const prevMonthDays = getMonthData(prevMonthYear, prevMonth0)
+  const [prevMonthYear, prevMonth] = month === 0 ? [year - 1, 11] : [year, month - 1]
+  const prevMonthDays = getMonthData(prevMonthYear, prevMonth)
 
-  const [nextMonthYear, nextMonth0] = month0 === 11 ? [year + 1, 0] : [year, month0 + 1]
+  const [nextMonthYear, nextMonth] = month === 11 ? [year + 1, 0] : [year, month + 1]
 
   const totalCalendarDays =
-    Math.ceil((startWeekDay + currentMonthDays) / WEEK_COUNT) * WEEK_COUNT
+    Math.ceil((startWeekDay + currentMonthDays) / DAYS_IN_WEEK) * DAYS_IN_WEEK
 
   const calendar: ICalendarDate[] = Array(totalCalendarDays)
     .fill(null)
     .map((_, index) => {
-      let dt, mon0, yr, active
+      let calendarDate, calendarMonth, calendarYear, active
 
       if (index < startWeekDay) {
         // Previous month
-        dt = prevMonthDays ? prevMonthDays - (startWeekDay - index - 1) : null
-        mon0 = prevMonth0
-        yr = prevMonthYear
+        calendarDate = prevMonthDays ? prevMonthDays - (startWeekDay - index - 1) : null
+        calendarMonth = prevMonth
+        calendarYear = prevMonthYear
         active = false
       } else if (index < startWeekDay + currentMonthDays) {
         // Current month
-        dt = index - startWeekDay + 1
-        mon0 = month0
-        yr = year
+        calendarDate = index - startWeekDay + 1
+        calendarMonth = month
+        calendarYear = year
         active = true
       } else {
         // Next month
-        dt = index - (startWeekDay + currentMonthDays) + 1
-        mon0 = nextMonth0
-        yr = nextMonthYear
+        calendarDate = index - (startWeekDay + currentMonthDays) + 1
+        calendarMonth = nextMonth
+        calendarYear = nextMonthYear
         active = false
       }
 
-      return { index, active, year: yr, month0: mon0, date: dt }
+      return {
+        index,
+        active,
+        year: calendarYear,
+        month: calendarMonth,
+        date: calendarDate,
+      }
     })
 
   return calendar
