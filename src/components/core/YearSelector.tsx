@@ -1,4 +1,6 @@
+import React from 'react'
 import { MAX_NEPALI_YEAR, MIN_NEPALI_YEAR } from '../../constants'
+import styles from './Selector.module.scss'
 
 const YEARS = Array.from(
   { length: MAX_NEPALI_YEAR - MIN_NEPALI_YEAR + 1 },
@@ -17,6 +19,7 @@ const YearSelector: React.FC<IYearSelectionProps> = ({
   <select
     value={selectedYear}
     onChange={e => onYearChange && onYearChange(Number(e.target.value))}
+    className={`${styles.selector}`}
   >
     {YEARS.map(year => (
       <option key={year} value={year}>

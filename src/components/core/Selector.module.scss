@@ -1,0 +1,29 @@
+.selector {
+  background-color: #fff;
+  color: black;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.selector:focus {
+  outline: none;
+}
+
+.monthSelector {
+  width: 100px;
+}
+
+.selector::-webkit-scrollbar {
+  width: 6px;
+}
+
+.selector::-webkit-scrollbar-thumb {
+  background-color: #2096f5;
+  border-radius: 4px;
+}
+
+.selector::-webkit-scrollbar-track {
+  background-color: #2095f53b;
+  border-radius: 4px;
+}
