@@ -38,10 +38,10 @@ To set up the project on your local machine, follow these steps:
      npm run dev
      ```
 
-   - Run lint checks::
+   - Run lint checks:
 
      ```bash
-     npm run test
+     npm run lint
      ```
 
    - Build the project for production:

@@ -3,20 +3,27 @@ import NepaliCalendar from './NepaliCalendar'
 import Popover from './core/Popover'
 import NepaliDate from 'nepali-datetime'
 import PickerInput from './core/PickerInput'
+import { DEFAULT_LOCALE, LOCALE_NE } from '../constants'
+import type { Locale } from '../types'
+import { englishNumber } from '../utils/nepaliNumber'
 
 interface INepaliDatePickerProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string
   format?: string
   inputElement?: ReactElement | null
+  locale?: Locale
   onDateSelect?: ((value: string) => void) | null
 }
 
 const getNepaliDateOrNull = (
   nepaliDateStr: string,
-  format: string
+  format: string,
+  locale: Locale
 ): NepaliDate | null => {
+  const value = locale === LOCALE_NE ? englishNumber(nepaliDateStr) : nepaliDateStr
+
   try {
-    return new NepaliDate(nepaliDateStr, format)
+    return new NepaliDate(value, format)
   } catch {
     return null
   }
@@ -27,6 +34,7 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
   format = 'YYYY-MM-DD',
   inputElement = null,
   onDateSelect = null,
+  locale = DEFAULT_LOCALE,
   ...rest
 }) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
@@ -46,7 +54,9 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
   }
 
   const handleSetDate = (nepaliDate: NepaliDate) => {
-    setDateValue(nepaliDate.format(format))
+    const inputValue =
+      locale === LOCALE_NE ? nepaliDate.formatNepali(format) : nepaliDate.format(format)
+    setDateValue(inputValue)
     setIsPopoverVisible(false)
   }
 
@@ -61,7 +71,8 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
       onOpenChange={newOpen => setIsPopoverVisible(newOpen)}
       content={
         <NepaliCalendar
-          selectedNepaliDate={getNepaliDateOrNull(inputValue, format)}
+          locale={locale}
+          selectedNepaliDate={getNepaliDateOrNull(inputValue, format, locale)}
           onDateSelect={handleSetDate}
         />
       }
