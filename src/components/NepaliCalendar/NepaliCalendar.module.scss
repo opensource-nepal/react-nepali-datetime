@@ -57,7 +57,7 @@
 .prevNext {
   width: 22px;
   height: 22px;
-  span{
+  span {
     cursor: pointer;
   }
 }
@@ -65,4 +65,5 @@
 .calendarControls {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }

@@ -1,12 +1,11 @@
-import { NEPALI_MONTHS_EN } from '../../constants'
-import styles from './Selector.module.scss'
+import styles from './YearMonthSelector.module.scss'
 import {
   DEFAULT_LOCALE,
   LOCALE_NE,
   NEPALI_MONTHS_EN,
   NEPALI_MONTHS_NE,
-} from '../../constants'
-import { Locale } from '../../types'
+} from '../../../constants'
+import { Locale } from '../../../types'
 
 interface IMonthSelectionProps {
   selectedMonth: number
@@ -25,7 +24,7 @@ const MonthSelector: React.FC<IMonthSelectionProps> = ({
   <select
     value={selectedMonth}
     onChange={e => onMonthChange && onMonthChange(Number(e.target.value))}
-    className={`${styles.selector} ${styles.monthSelector}`}
+    className={styles.selector}
   >
     {getNepaliMonths(locale).map((month, monthIndex) => (
       <option key={month} value={monthIndex}>

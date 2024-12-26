@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import NepaliDate from 'nepali-datetime'
 
-import YearSelector from '../core/YearSelector'
-import MonthSelector from '../core/MonthSelector'
+import YearSelector from '../core/YearMonthSelector/YearSelector'
+import MonthSelector from '../core/YearMonthSelector/MonthSelector'
 import {
   DEFAULT_LOCALE,
   LOCALE_NE,

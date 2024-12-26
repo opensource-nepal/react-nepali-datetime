@@ -4,14 +4,12 @@
   padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #2096f5;
 }
 
 .selector:focus {
   outline: none;
-}
-
-.monthSelector {
-  width: 100px;
 }
 
 .selector::-webkit-scrollbar {
@@ -24,6 +22,5 @@
 }
 
 .selector::-webkit-scrollbar-track {
-  background-color: #2095f53b;
   border-radius: 4px;
 }
