@@ -1,0 +1,14 @@
+NepaliDatePicker:
+    onDateSelect: sets the current date (passed to NepaliCalendar)
+
+    UI Components:
+    - NepaliCalendar
+    - NepaliDateInput (date object is passed)
+
+NepaliDateInput:
+    onBlur: reformats the date
+    onChange: updates the value state, shows the error
+    onKeyDown: handle enter input
+
+    UI Components:
+    - input (dont wrap it other elements, extract className and add it again)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import NepaliDatePicker from './components/NepaliDatePicker'
 import './App.css'
+import NepaliDateInput from './components/NepaliDateInput'
 
 function App() {
   const [inputValue, setInputValue] = useState('')
@@ -10,6 +11,9 @@ function App() {
       <h1>React Nepali DateTime</h1>
       <div className="card">
         <form method="get">
+          <div>Date Input</div>
+          <NepaliDateInput name="date0" />
+          <hr />
           <div>Basic Nepali Date picker</div>
           <NepaliDatePicker name="date1" />
           <hr />

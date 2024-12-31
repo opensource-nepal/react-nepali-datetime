@@ -1,13 +1,12 @@
-import React, { useState, ReactElement, cloneElement, useEffect } from 'react'
+import React, { useState, ReactElement, useEffect } from 'react'
 import NepaliCalendar from './NepaliCalendar'
 import Popover from './core/Popover'
 import NepaliDate from 'nepali-datetime'
-import PickerInput from './core/PickerInput'
 import { DEFAULT_LOCALE, LOCALE_NE } from '../constants'
 import type { Locale } from '../types'
 import { englishNumber } from '../utils/nepaliNumber'
 import classNames from '../utils/classNames'
-import styles from './NepaliDatePicker.module.scss'
+import NepaliDateInput from './NepaliDateInput'
 
 interface INepaliDatePickerProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string
@@ -34,8 +33,8 @@ const getNepaliDateOrNull = (
 const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
   value = '',
   format = 'YYYY-MM-DD',
-  inputElement = null,
-  onDateSelect = null,
+  inputElement,
+  onDateSelect,
   locale = DEFAULT_LOCALE,
   ...rest
 }) => {
@@ -43,84 +42,37 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
   const [inputValue, setInputValue] = useState(value)
   const [npDate, setNpDate] = useState<NepaliDate | null>()
 
-  const isDateValueError = inputValue && !npDate
-
   useEffect(() => {
     setInputValue(value)
     setNpDate(getNepaliDateOrNull(value, format, locale))
   }, [value, locale, format])
 
-  const callOnDateSelect = (dateValue: string, nepaliDate?: NepaliDate) =>
-    onDateSelect && onDateSelect(dateValue, nepaliDate)
-
-  const emptyDateValue = () => {
-    setInputValue('')
-    setNpDate(null)
-    callOnDateSelect('')
-  }
-
-  const updateDateByNepaliDate = (nepaliDate: NepaliDate) => {
+  const updateDate = (nepaliDate: NepaliDate) => {
     const formattedValue =
       locale === LOCALE_NE ? nepaliDate.formatNepali(format) : nepaliDate.format(format)
     setInputValue(formattedValue)
     setNpDate(nepaliDate)
-    callOnDateSelect(formattedValue, nepaliDate)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateValue = e.target.value
-
-    const npDateObj = getNepaliDateOrNull(dateValue, format, locale)
-    setInputValue(dateValue)
-    setNpDate(npDateObj)
+    onDateSelect?.(formattedValue)
   }
 
   const handleDateSelect = (nepaliDate: NepaliDate) => {
-    updateDateByNepaliDate(nepaliDate)
+    updateDate(nepaliDate)
     setIsPopoverVisible(false)
   }
 
-  const setFinalValue = () => {
-    if (isDateValueError) {
-      // setting empty value if the user input date is invalid
-      emptyDateValue()
-    } else if (npDate) {
-      // not every user input date are in format, so reformatting the date again
-      updateDateByNepaliDate(npDate)
+  const handleDateChange = (_: string, nepaliDate: NepaliDate | null) => {
+    if (!nepaliDate) {
+      return
     }
-  }
 
-  const handlePopoverOpenChange = (newOpen: boolean) => {
-    setIsPopoverVisible(newOpen)
-    if (!newOpen) {
-      setFinalValue()
-    }
+    updateDate(nepaliDate)
   }
-
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') {
-      setFinalValue()
-    }
-  }
-
-  const inputProps = {
-    value: inputValue,
-    onChange: handleInputChange,
-    onKeyDown: handleEnter,
-  }
-
-  // updating props to custom input element
-  const customInputElement =
-    inputElement && cloneElement(inputElement, { ...rest, ...inputProps })
 
   return (
     <Popover
-      className={classNames(
-        'ndt-date-picker',
-        isDateValueError && styles.datePickerInputError
-      )}
+      className={classNames('ndt-date-picker')}
       open={isPopoverVisible}
-      onOpenChange={handlePopoverOpenChange}
+      onOpenChange={newOpen => setIsPopoverVisible(newOpen)}
       content={
         <NepaliCalendar
           locale={locale}
@@ -129,7 +81,13 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
         />
       }
     >
-      {customInputElement || <PickerInput {...rest} {...inputProps} />}
+      <NepaliDateInput
+        value={inputValue}
+        format={format}
+        inputElement={inputElement}
+        onDateChange={handleDateChange}
+        {...rest}
+      />
     </Popover>
   )
 }
