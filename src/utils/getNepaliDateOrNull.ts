@@ -8,6 +8,10 @@ const getNepaliDateOrNull = (
   format: string,
   locale: Locale
 ): NepaliDate | null => {
+  if (nepaliDateStr.trim() === '') {
+    return null
+  }
+
   const value = locale === LOCALE_NE ? englishNumber(nepaliDateStr) : nepaliDateStr
 
   try {

@@ -1,5 +1,5 @@
 import NepaliDate from 'nepali-datetime'
-import { cloneElement, ReactElement, useEffect, useState } from 'react'
+import { cloneElement, ReactElement, useEffect, useRef, useState } from 'react'
 import { Locale } from '../../types'
 import { DEFAULT_LOCALE, LOCALE_NE } from '../../constants'
 import classNames from '../../utils/classNames'
@@ -30,17 +30,30 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
   ...rest
 }) => {
   const [inputValue, setInputValue] = useState(value)
-  const [npDate, setNpDate] = useState<NepaliDate | null>()
-  const isDateValueError = inputValue && !npDate
+  const npDateRef = useRef<NepaliDate | null>()
+  const isDateValueError = inputValue && !npDateRef.current
 
   useEffect(() => {
-    setInputValue(value)
-    setNpDate(getNepaliDateOrNull(value, format, locale))
-  }, [value, locale, format])
+    // re-update the states when the props get changed
+
+    const npDateObj = getNepaliDateOrNull(value, format, locale)
+    if (!npDateObj) {
+      setInputValue(value)
+      npDateRef.current = null
+      return
+    }
+
+    const npDate = npDateRef.current
+    const newFormattedDate = npDate && formatNepaliDate(npDate, format, locale)
+    if (value !== newFormattedDate) {
+      setInputValue(value)
+      npDateRef.current = npDateObj
+    }
+  }, [format, locale, value])
 
   const emptyDateValue = () => {
     setInputValue('')
-    setNpDate(null)
+    npDateRef.current = null
     onDateChange?.('', null)
   }
 
@@ -48,7 +61,7 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
     const formattedValue = formatNepaliDate(nepaliDate, format, locale)
 
     setInputValue(formattedValue)
-    setNpDate(nepaliDate)
+    npDateRef.current = nepaliDate
     onDateChange?.(formattedValue, nepaliDate)
   }
 
@@ -56,9 +69,9 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
     if (isDateValueError) {
       // setting empty value if the user input date is invalid
       emptyDateValue()
-    } else if (npDate) {
+    } else if (npDateRef.current) {
       // not every user input date are in format, so reformatting the date again
-      reformatDateValue(npDate)
+      reformatDateValue(npDateRef.current)
     }
   }
 
@@ -67,12 +80,9 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
 
     const npDateObj = getNepaliDateOrNull(dateValue, format, locale)
     setInputValue(dateValue)
-    setNpDate(npDateObj)
+    npDateRef.current = npDateObj
     if (npDateObj) {
-      const newFormattedDate = formatNepaliDate(npDateObj, format, locale)
-      if (dateValue === newFormattedDate) {
-        onDateChange?.(dateValue, npDateObj)
-      }
+      onDateChange?.(dateValue, npDateObj)
     }
   }
 
