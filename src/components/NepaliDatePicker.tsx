@@ -86,6 +86,7 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
         format={format}
         inputElement={inputElement}
         onDateChange={handleDateChange}
+        locale={locale}
         {...rest}
       />
     </Popover>
