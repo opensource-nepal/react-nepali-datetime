@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NepaliDate from 'nepali-datetime'
 
 import YearSelector from '../core/YearMonthSelector/YearSelector'
@@ -33,12 +33,16 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
   const now = new NepaliDate()
   const weekDays = locale === LOCALE_NE ? WEEKDAYS_SHORT_NE : WEEKDAYS_SHORT_EN
 
-  const [selectedYear, setSelectedYear] = useState(
-    selectedNepaliDate?.getYear() ?? now.getYear()
-  )
-  const [selectedMonth, setSelectedMonth] = useState(
-    selectedNepaliDate?.getMonth() ?? now.getMonth()
-  )
+  const [selectedYear, setSelectedYear] = useState(now.getYear())
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth())
+
+  useEffect(() => {
+    if (!selectedNepaliDate) {
+      return
+    }
+    setSelectedYear(selectedNepaliDate?.getYear())
+    setSelectedMonth(selectedNepaliDate?.getMonth())
+  }, [selectedNepaliDate])
 
   const isCurrentDate = (calendarDate: ICalendarDate) =>
     calendarDate.year === now.getYear() &&

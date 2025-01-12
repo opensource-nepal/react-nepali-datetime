@@ -9,12 +9,16 @@ interface IPopoverContentProps {
   children: React.ReactNode
   popoverChildRef?: React.RefObject<HTMLInputElement>
   onOutsideClick?: () => void
+  onMouseDown?: (event: React.MouseEvent) => void
+  onMouseEnter?: (event: React.MouseEvent) => void
 }
 
 const PopoverContent: React.FC<IPopoverContentProps> = ({
   popoverChildRef,
   children,
   onOutsideClick,
+  onMouseDown,
+  onMouseEnter,
 }) => {
   const popupRef = useRef<HTMLDivElement | null>(null)
   const [popupStyles, setPopupStyles] = useState<React.CSSProperties>()
@@ -49,6 +53,17 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
     [popoverChildRef, onOutsideClick]
   )
 
+  const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (!onOutsideClick) {
+      return
+    }
+
+    const relatedTarget = event.relatedTarget as Node
+    if (!popoverChildRef?.current?.contains(relatedTarget)) {
+      onOutsideClick()
+    }
+  }
+
   useLayoutEffect(() => {
     updatePopupPosition()
     document.addEventListener('mousedown', handleOutsideClick)
@@ -64,6 +79,10 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
       className={classNames('ndt-popover-content', styles.popoverContent)}
       ref={popupRef}
       style={popupStyles}
+      onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
+      onBlur={handleBlur}
+      tabIndex={-1}
     >
       {children}
     </div>

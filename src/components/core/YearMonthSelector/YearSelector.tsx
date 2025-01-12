@@ -29,6 +29,7 @@ const YearSelector: React.FC<IYearSelectionProps> = ({
     value={selectedYear}
     onChange={e => onYearChange && onYearChange(Number(e.target.value))}
     className={styles.selector}
+    tabIndex={-1}
   >
     {YEARS.map(year => (
       <option key={year} value={year}>

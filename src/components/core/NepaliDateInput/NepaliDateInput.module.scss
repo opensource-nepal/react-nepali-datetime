@@ -1,0 +1,14 @@
+.nepaliDateInput {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.nepaliDateInputError {
+  color: #fb4141;
+
+  input {
+    color: inherit;
+  }
+}
