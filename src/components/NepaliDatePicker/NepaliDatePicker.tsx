@@ -109,8 +109,12 @@ const NepaliDatePicker: React.FC<INepaliDatePickerProps> = ({
       open={isPopoverVisible}
       onOpenChange={newOpen => setIsPopoverVisible(newOpen)}
       onContentMouseDown={() => {
-        // NepaliDateInput onComplete (blur) will set this to false
+        // NepaliDateInput onComplete (blur) will use the value of isCalendarClicked (ref handleInputComplete)
         isCalendarClicked.current = true
+      }}
+      onContentBlur={() => {
+        // reset isCalendarClicked if the user leaving the calendar
+        isCalendarClicked.current = false
       }}
       onContentMouseEnter={() => reformatInputValue()}
       content={

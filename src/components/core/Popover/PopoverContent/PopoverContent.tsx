@@ -11,6 +11,7 @@ interface IPopoverContentProps {
   onOutsideClick?: () => void
   onMouseDown?: (event: React.MouseEvent) => void
   onMouseEnter?: (event: React.MouseEvent) => void
+  onBlur?: (event: React.FocusEvent) => void
 }
 
 const PopoverContent: React.FC<IPopoverContentProps> = ({
@@ -19,6 +20,7 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
   onOutsideClick,
   onMouseDown,
   onMouseEnter,
+  onBlur,
 }) => {
   const popupRef = useRef<HTMLDivElement | null>(null)
   const [popupStyles, setPopupStyles] = useState<React.CSSProperties>()
@@ -37,6 +39,7 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
   }, [popoverChildRef])
 
   const handleOutsideClick = useCallback(
+    // Handle if user clicks outside the Popover elements (Popover Children and Popover Content).
     (event: MouseEvent) => {
       if (!onOutsideClick) {
         return
@@ -54,12 +57,20 @@ const PopoverContent: React.FC<IPopoverContentProps> = ({
   )
 
   const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    // Handle if user changes the focus from Popover elements (Popover Children and Popover Content).
+
+    // blur event
+    onBlur?.(event)
+
     if (!onOutsideClick) {
       return
     }
 
     const relatedTarget = event.relatedTarget as Node
-    if (!popoverChildRef?.current?.contains(relatedTarget)) {
+    if (
+      !popupRef?.current?.contains(relatedTarget) &&
+      !popoverChildRef?.current?.contains(relatedTarget)
+    ) {
       onOutsideClick()
     }
   }

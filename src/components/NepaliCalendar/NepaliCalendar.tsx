@@ -176,7 +176,11 @@ const NepaliCalendar: React.FC<INepaliCalendarProps> = ({
           {weekDays.map(weekShort => (
             <div
               key={weekShort}
-              className={classNames('ndt-calendar-header', styles.calendarCell)}
+              className={classNames(
+                'ndt-calendar-cell-header',
+                styles.calendarCellHeader,
+                styles.calendarCell
+              )}
             >
               {weekShort}
             </div>

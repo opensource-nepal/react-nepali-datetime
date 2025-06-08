@@ -13,6 +13,7 @@ interface IPopoverProps {
   onOpenChange?: (newOpen: boolean) => void
   onContentMouseDown?: (event: React.MouseEvent) => void
   onContentMouseEnter?: (event: React.MouseEvent) => void
+  onContentBlur?: (event: React.FocusEvent) => void
 }
 
 const Popover: React.FC<IPopoverProps> = ({
@@ -23,16 +24,11 @@ const Popover: React.FC<IPopoverProps> = ({
   onOpenChange,
   onContentMouseDown,
   onContentMouseEnter,
+  onContentBlur,
 }) => {
   const popoverChildRef = useRef<HTMLInputElement | null>(null)
 
-  const setOpenValue = (openValue: boolean) => {
-    if (!onOpenChange) {
-      return
-    }
-
-    onOpenChange(openValue)
-  }
+  const setOpenValue = (openValue: boolean) => onOpenChange?.(openValue)
 
   return (
     <div
@@ -41,6 +37,7 @@ const Popover: React.FC<IPopoverProps> = ({
     >
       <div
         className="ndt-popover-child"
+        style={{ display: 'flex' }}
         ref={popoverChildRef}
         onClick={() => setOpenValue(true)}
       >
@@ -52,6 +49,7 @@ const Popover: React.FC<IPopoverProps> = ({
           popoverChildRef={popoverChildRef}
           onMouseDown={onContentMouseDown}
           onMouseEnter={onContentMouseEnter}
+          onBlur={onContentBlur}
         >
           {content}
         </PopoverContent>

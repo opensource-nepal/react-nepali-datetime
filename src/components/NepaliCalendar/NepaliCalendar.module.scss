@@ -30,7 +30,7 @@
   opacity: 0.5;
 }
 
-.calendarCell:not(.calendarCellInactive) {
+.calendarCell:not(.calendarCellInactive,.calendarCellHeader) {
   cursor: pointer;
 }
 
