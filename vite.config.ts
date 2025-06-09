@@ -5,6 +5,7 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './react-nepali-datetime/',
   plugins: [
     react(),
     dts({
