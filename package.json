@@ -25,17 +25,17 @@
     "calendar",
     "nepali-calendar"
   ],
- "scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "lint": "eslint .",
-  "lint-fix": "eslint . --fix",
-  "preview": "vite preview",
-  "prepare": "husky install",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
-}
-,
+  "scripts": {
+    "dev": "vite --config vite.demo.config.ts",
+    "build": "tsc -b && vite build",
+    "build:demo": "vite build --config vite.demo.config.ts",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "preview": "vite preview --config vite.demo.config.ts",
+    "prepare": "husky install",
+    "predeploy": "npm run build:demo",
+    "deploy": "gh-pages -d dist"
+  },
   "lint-staged": {
     "*": "eslint --fix"
   },
