@@ -35,8 +35,50 @@
 
 .card {
   padding: 2em;
+  border: 2px solid #ccc;
+  border-radius: 8px;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+
+.dt-date-picker {
+background-color: red;
+}
+
+
+input[name^="date"] {
+  margin:5px 0px 10px 0px;
+  width: 100%;
+  height: 36px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[name^="date"]:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 120, 215, 0.5);
+}
+
+
+input.custom-date-input {
+  height: 36px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input.custom-date-input:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 120, 215, 0.5);
 }
