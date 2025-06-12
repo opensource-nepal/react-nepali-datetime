@@ -8,6 +8,7 @@
   "files": [
     "dist"
   ],
+  "description": "React components for a Nepali DateTime picker, built on top of nepali-datetime.",
   "keywords": [
     "javascript",
     "typescript",
