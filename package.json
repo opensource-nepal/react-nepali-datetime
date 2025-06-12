@@ -31,7 +31,8 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "preview": "vite preview",
-    "prepare": "husky && npm run build"
+    "prepare": "husky && npm run build",
+    "build:demo": "vite build --config vite-demo.config.ts"
   },
   "lint-staged": {
     "*": "eslint --fix"
