@@ -25,7 +25,7 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
 
   const handleBlur = () => onComplete?.()
 
-  const inputProps = {
+  const defaultInputProps = {
     ...rest,
     value,
     onChange,
@@ -34,17 +34,25 @@ const NepaliDateInput: React.FC<INepaliDateInputProps> = ({
     onBlur: handleBlur,
     className: classNames(
       'ndt-date-input',
-      styles.nepaliDateInput,
       hasError && styles.nepaliDateInputError,
       className
     ),
   }
 
   if (inputElement) {
-    return cloneElement(inputElement, inputProps)
+    return cloneElement(inputElement, defaultInputProps)
   }
 
-  return <input type="text" {...inputProps} />
+  const nepaliDateInputProps = {
+    ...defaultInputProps,
+    className: classNames(
+      'ndt-date-input',
+      hasError && styles.nepaliDateInputError,
+      className,
+      styles.nepaliDateInput
+    ),
+  }
+  return <input type="text" {...nepaliDateInputProps} />
 }
 
 export default NepaliDateInput
