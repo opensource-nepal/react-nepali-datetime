@@ -32,10 +32,17 @@ function App() {
               <input
                 name="date3"
                 placeholder="Custom Input"
-                style={{ height: 32, width: '100%' }}
+                className="customClassName"
+                style={{
+                  height: 40,
+                  width: '100%',
+                  padding: '4px',
+                  fontSize: '18px',
+                }}
               />
             }
           />
+          <hr />
           <button type="submit">Submit</button>
         </form>
       </div>
